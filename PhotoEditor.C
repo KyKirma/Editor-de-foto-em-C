@@ -4,32 +4,38 @@
 #include <math.h>
 
 void colortogrey(FILE* foto){
-    FILE *cnvt = fopen("rgb-to-grey.png", "w+");
-    int i = 1, lin_foto = 0, col_foto = 0, r, g, b, med;
+    int i, j, k, colunas, linhas, vmax, media;
     char buffer[250];
-    fprintf(cnvt, "P2\n\n");
-    
-    while(!feof(foto)){
-        i++;
-        fgets(buffer, 250, foto);
-        if (i = 3) {
-            fscanf(foto, "%d", &lin_foto);
-            fscanf(foto, "%d", &col_foto);
-            fprintf(cnvt, "%d ", lin_foto);
-            fprintf(cnvt, "%d\n", col_foto);
-        } else if (i > 3) {
-            fscanf(foto, "%d", &r);
-            fscanf(foto, "%d", &g);
-            fscanf(foto, "%d", &b);
-            med = (r + g + b)/3;
-            fprintf(cnvt, "%d\n", med);
+    fgets(buffer, 250, foto);
+    fgets(buffer, 250, foto);
+    fscanf(foto, "%d %d", &colunas, &linhas);
+    int matriz[linhas][colunas][3];
+    fscanf(foto, "%d", &vmax);
+    for(i = 0; i < linhas; i++){
+        for(j = 0; j < colunas; j++){
+            for(k = 0; k < 3; k++){
+                fscanf(foto, "%d", &matriz[i][j][k]);
+            }
         }
     }
-    fclose(cnvt);
+    FILE *escaladecinza = fopen("escaladecinza.ppm", "w+");
+    fprintf(escaladecinza, "P3\n\n");
+    fprintf(escaladecinza, "%d %d\n", colunas, linhas);
+    fprintf(escaladecinza, "%d\n", vmax);
+    for(i = 0; i < linhas; i++){
+        for(j = 0; j < colunas; j++){
+            media = (matriz[i][j][0] + matriz[i][j][1] + matriz[i][j][2])/3;
+            fprintf(escaladecinza, "%d ", media);
+            fprintf(escaladecinza, "%d ", media);
+            fprintf(escaladecinza, "%d ", media);
+        }
+    }
+    printf("\nArquivo gerado!\n");
+    fclose(escaladecinza);
 }
 
 int main(void){
-    int c;
+    int c, i;
     char arq[50];
 
     printf("Bem vindo ao menu do PhotoEditor, selecione o arquivo:\n");
@@ -42,15 +48,22 @@ int main(void){
         scanf("%s", arq);
         foto = fopen(arq, "r+");
     }
-    printf("\nSelecione as opções de edição:\n1. Converter uma imagem colorida para escala de cinza.");
-    scanf("%d", &c);
+    
+    while (i != 0){
+        printf("\nSelecione as opcoes de edicao:\n1. Converter uma imagem colorida para escala de cinza.\n2. Fechar o programa.\n");
+        scanf("%d", &c);
 
-    switch (c){
-        case 1:
-            colortogrey(foto);
-            break;
-        default:
-            printf("tenta dnv");
-            break;
+        switch (c){
+            case 1:
+                colortogrey(foto);
+                break;
+            case 2:
+                printf("Obrigado por usar o programa.\n");
+                i = 0;
+                break;
+            default:
+                printf("tenta dnv");
+                break;
+        }
     }
 }
