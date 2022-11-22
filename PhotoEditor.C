@@ -145,4 +145,5 @@ int main(void){
         }
     }
     fclose(foto);
+    
 }
