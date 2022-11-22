@@ -95,7 +95,6 @@ int vertical(FILE* foto){
 }
 
 
-
 int main(void){
     int c, i;
     char arq[50];
