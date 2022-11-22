@@ -33,11 +33,11 @@ void colortogrey(FILE* foto){
     printf("\nArquivo gerado!\n");
     fclose(escaladecinza);
 }
-
+    
 int horizontal(FILE* foto){
     int i, j, k, colunas, linhas, vmax;
     char buffer[250];
-    fgets(buffer, 250, foto);
+        fgets(buffer, 250, foto);
     fgets(buffer, 250, foto);
     fscanf(foto, "%d %d", &colunas, &linhas);
     int matriz[linhas][colunas][3];
@@ -46,8 +46,8 @@ int horizontal(FILE* foto){
         for(j = 0; j < colunas; j++){
             for(k = 0; k < 3; k++){
                 fscanf(foto, "%d", &matriz[i][j][k]);
-            }
         }
+    }
     }
     FILE *horizontal = fopen("horizontal.ppm", "w+");
     fprintf(horizontal, "P3\n\n");
@@ -140,7 +140,7 @@ int main(void){
                 i = 0;
                 break;
             default:
-                printf("tenta dnv");
+                printf("Comando desconhecido, tente novamente.\n");
                 break;
         }
     }
