@@ -3,7 +3,7 @@
 #include <time.h>
 #include <math.h>
 
-int colortogrey(FILE* foto){
+void colortogrey(FILE* foto){
     int i, j, k, colunas, linhas, vmax, media;
     char buffer[250];
     fgets(buffer, 250, foto);
@@ -35,7 +35,7 @@ int colortogrey(FILE* foto){
     fclose(escaladecinza);
 }
     
-int horizontal(FILE* foto){
+void horizontal(FILE* foto){
     int i, j, k, colunas, linhas, vmax;
     char buffer[250];
     fgets(buffer, 250, foto);
@@ -66,7 +66,7 @@ int horizontal(FILE* foto){
     fclose(horizontal);
 }
 
-int vertical(FILE* foto){
+void vertical(FILE* foto){
     int i, j, k, colunas, linhas, vmax;
     char buffer[250];
     fgets(buffer, 250, foto);
@@ -97,7 +97,7 @@ int vertical(FILE* foto){
     fclose(vertical);
 }
 
-int metadevertical(FILE* foto){
+void metadevertical(FILE* foto){
     int i, j, k, colunas, linhas, vmax;
     int a,b,c;
     a = linhas/2;
@@ -144,7 +144,7 @@ int metadevertical(FILE* foto){
     fclose(metadedireita);
 }
 
-int metadehorizontal(FILE* foto){
+void metadehorizontal(FILE* foto){
     int i, j, k, colunas, linhas, vmax;
     int a,b,c;
     a = linhas/2;
@@ -191,7 +191,7 @@ int metadehorizontal(FILE* foto){
     fclose(metadeinferior);
 }
 
-int cor_artificial(FILE* foto){
+void cor_artificial(FILE* foto){
     int i, j, k, colunas, linhas, vmax, media;
     char buffer[250];
     fgets(buffer, 250, foto);
@@ -248,6 +248,143 @@ int cor_artificial(FILE* foto){
     fclose(artificial);
 }
 
+void rota_direita(FILE* foto){
+    FILE *destino = fopen("R_direita.ppm", "w+");
+    int linhas_imagem = 0, escala, pixel, colunas_imagem = 0, contador = 0;
+    char buffer[250];
+    fgets(buffer, 250, foto);
+    fgets(buffer, 250, foto);
+    fprintf(destino, "P3\n");
+    fscanf(foto, "%d %d", &colunas_imagem, &linhas_imagem);
+    fprintf(destino, "%d %d\n", colunas_imagem, linhas_imagem);
+    fscanf(foto, "%d", &escala);
+    fprintf(destino, "255\n");
+    int matriz[colunas_imagem][linhas_imagem][3];
+    for(int i = 0; i < linhas_imagem; i++){
+        for(int j = 0; j < colunas_imagem; j++){
+            for(int k = 0; k < 3; k++){
+                fscanf(foto, "%d", &matriz[i][j][k]);
+            }
+        }
+    }
+    for(int i = 0; i < linhas_imagem; i++){
+        for(int j = linhas_imagem; j > 0; j--){
+            for(int k = 0; k < 3; k++){
+                fprintf(destino, "%d ", matriz[j][i][k]);
+            }
+            fprintf(destino, "\n");
+        }
+    }
+    printf("\nArquivo gerado!\n");
+    fclose(destino);
+}
+
+void rota_esquerda(FILE* foto){
+    FILE *destino = fopen("R_esquerda.ppm", "w");
+    int linhas_imagem = 0, escala, pixel, colunas_imagem = 0, contador = 0;
+    char buffer[250];
+    fgets(buffer, 250, foto);
+    fgets(buffer, 250, foto);
+    fprintf(destino, "P3\n");
+    fscanf(foto, "%d %d", &colunas_imagem, &linhas_imagem);
+    fprintf(destino, "%d %d\n", colunas_imagem, linhas_imagem);
+    fscanf(foto, "%d", &escala);
+    fprintf(destino, "255\n");
+    int matriz[colunas_imagem][linhas_imagem][3];
+    for(int i = 0; i < linhas_imagem; i++){
+        for(int j = 0; j < colunas_imagem; j++){
+            for(int k = 0; k < 3; k++){
+                fscanf(foto, "%d", &matriz[i][j][k]);
+            }
+        }
+    }
+    for(int i = 0; i < linhas_imagem; i++){
+        for(int j = 0; j < colunas_imagem; j++){
+            for(int k = 0; k < 3; k++){
+                fprintf(destino, "%d ", matriz[j][i][k]);
+            }
+            fprintf(destino, "\n");
+        }
+    }
+    printf("\nArquivo gerado!\n");
+    fclose(destino);    
+}
+
+void part_cinza(FILE* foto){
+    int i, j, k, colunas, linhas, vmax, a;
+    char buffer[250];
+    fgets(buffer, 250, foto);
+    fgets(buffer, 250, foto);
+    fscanf(foto, "%d %d", &colunas, &linhas);
+    int matriz[linhas][colunas][3];
+    fscanf(foto, "%d", &vmax);
+    for(i = 0; i < linhas; i++){
+        for(j = 0; j < colunas; j++){
+            for(k = 0; k < 3; k++){
+                fscanf(foto, "%d", &matriz[i][j][k]);
+            }
+        }
+    }
+    FILE *parte_cinza = fopen("pedaco_cinza.ppm", "w+");
+    fprintf(parte_cinza, "P3\n");
+    fprintf(parte_cinza, "#Pedro\n");
+    fprintf(parte_cinza, "%d %d\n", colunas, linhas);
+    fprintf(parte_cinza, "%d\n", vmax);   
+    for(i = 0; i < linhas; i++){
+        for(j = 0; j < colunas; j++){
+            for(k = 0; k < 3; k++){
+                if(i > j){
+                    a = (matriz[i][j][0]+matriz[i][j][1]+matriz[i][j][2])/3;
+                    fprintf(parte_cinza, "%d\n", a);
+                }else{
+                    fprintf(parte_cinza, "%d\n", (matriz[i][j][k]));
+                }
+            }
+        }
+    }
+    printf("\nArquivo gerado!\n");
+    fclose(parte_cinza);    
+}
+
+void rgb(FILE* foto){
+    FILE *cor_vermelha = fopen("cor_vermelha.ppm", "w+");
+    FILE *cor_verde = fopen("cor_verde.ppm", "w+");
+    FILE *cor_azul = fopen("cor_azul.ppm", "w+");
+    int linhas_da_imagem = 0, escala, coluna_da_imagem = 0, r, g, b;
+    char buffer[250], tipo_imagem[2];
+    fgets(buffer, 250, foto);
+    fgets(buffer, 250, foto);
+    fprintf(cor_vermelha, "P3\n");
+    fprintf(cor_verde, "P3\n");
+    fprintf(cor_azul, "P3\n");
+    fscanf(foto, "%d", &linhas_da_imagem);
+    fscanf(foto, "%d", &coluna_da_imagem);
+    fprintf(cor_vermelha, "%d ", linhas_da_imagem);
+    fprintf(cor_vermelha, "%d\n", coluna_da_imagem);
+    fprintf(cor_verde, "%d ", linhas_da_imagem);
+    fprintf(cor_verde, "%d\n", coluna_da_imagem);
+    fprintf(cor_azul, "%d ", linhas_da_imagem);
+    fprintf(cor_azul, "%d\n", coluna_da_imagem);
+    fscanf(foto, "%d", &escala);
+    fprintf(cor_vermelha, "255\n");
+    fprintf(cor_verde, "255\n");
+    fprintf(cor_azul, "255\n");
+    for(int linhas = 0; linhas < linhas_da_imagem; linhas++) {
+        for(int colunas = 0; colunas < coluna_da_imagem; colunas++) {
+            fscanf(foto, "%d", &r);
+            fscanf(foto, "%d", &g);
+            fscanf(foto, "%d", &b);
+            fprintf(cor_vermelha, "%d 0 0\n", r);
+            fprintf(cor_verde, "0 %d 0\n", g);
+            fprintf(cor_azul, "0 0 %d\n", b);
+        }
+    }
+    printf("\nArquivos gerados!\n");
+    fclose(cor_vermelha);
+    fclose(cor_verde);
+    fclose(cor_azul);
+}
+
 int main(void){
     int c, i;
     char arq[50];
@@ -297,6 +434,18 @@ int main(void){
                 break;
             case 6:
                 cor_artificial(foto);
+                break;
+            case 7:
+                rota_direita(foto);
+                break;
+            case 8:
+                rota_esquerda(foto);
+                break;
+            case 9:
+                part_cinza(foto);
+                break;
+            case 10:
+                rgb(foto);
                 break;
             case 11:
                 printf("Obrigado por usar o programa.\n");
