@@ -111,7 +111,7 @@ int main(void){
     }
     
     while (i != 0){
-        printf("\n\nSelecione as opcoes:\n");
+        printf("\nSelecione as opcoes:\n");
         printf("\n1 - Converter uma imagem colorida para escala de cinza");
         printf("\n2 - Espelhar uma imagem horizontalmente");
         printf("\n3 - Espelhar uma imagem verticalmente");
@@ -141,9 +141,7 @@ int main(void){
                 break;
             default:
                 printf("Comando desconhecido, tente novamente.\n");
-                break;
         }
     }
     fclose(foto);
-    
 }
