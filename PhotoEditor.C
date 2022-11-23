@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-#include <math.h>
 
 void colortogrey(FILE* foto){
     int i, j, k, colunas, linhas, vmax, media;
